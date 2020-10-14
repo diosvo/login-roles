@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+
 import { ProductModelServer, ServerResponse } from 'src/app/model/product.model';
 import { ProductsService } from 'src/app/services/products.service';
 
@@ -10,7 +11,8 @@ import { ProductsService } from 'src/app/services/products.service';
 export class HomeComponent implements OnInit {
   products: ProductModelServer[];
 
-  constructor(private productService: ProductsService) { }
+  constructor(private productService: ProductsService) {
+  }
 
   ngOnInit(): void {
     this.productService.getAllProducts().subscribe((prods: ServerResponse) => {

@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { JwtService } from 'src/app/services/jwt.service';
-import { BehaviorSubject } from 'rxjs';
+import { first } from 'rxjs/operators';
+import { Role } from 'src/app/model/role.model';
 
 @Component({
   selector: 'app-login',
@@ -11,6 +12,9 @@ import { BehaviorSubject } from 'rxjs';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+
+  loading = false
+  returnUrl: string
 
   loginForm = this.fb.group(
     {
@@ -22,15 +26,15 @@ export class LoginComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private token: JwtService) {
-
+    private token: JwtService,
+    private route: ActivatedRoute) {
     if (this.authService.userValue) this.router.navigate(['/'])
   }
 
   ngOnInit(): void {
     let isLoggedIn = this.token.isLoggedIn()
     if (isLoggedIn) {
-      this.router.navigate(['/home'])
+      this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     }
   }
 
@@ -39,16 +43,19 @@ export class LoginComponent implements OnInit {
       return
     }
 
-    this.authService.loginUser(this.email.value, this.password.value).subscribe(
-      res => {
+    this.loading = true
+    this.authService.loginUser(this.email.value, this.password.value)
+      .pipe(first())
+      .subscribe(res => {
+        if (res.role === Role.Admin) {
+          this.router.navigate(['/admin'])
+        } else if (res.role === Role.Customer) {
           this.router.navigate(['/home'])
-
-        let token = res.accessToken
-        localStorage.setItem('x-access-token', token)
-        localStorage.setItem('current-user', JSON.stringify(res))
-
-      }, err => console.log(err)
-    )
+        }
+      }, error => {
+        console.log(error);
+        this.loading = false
+      })
 
     this.loginForm.reset();
   }

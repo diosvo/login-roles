@@ -4,10 +4,11 @@ import { ToastrService } from 'ngx-toastr';
 
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-    constructor(private toastr: ToastrService) { }
+    constructor(private toastr: ToastrService, private authService: AuthService) { }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(req).pipe(catchError(x => this.handleAuthError(x)));
@@ -28,6 +29,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                 positionClass: 'toast-top-right',
                 closeButton: true
             })
+            this.authService.logout()
         }
 
         if (err.status === 404) {

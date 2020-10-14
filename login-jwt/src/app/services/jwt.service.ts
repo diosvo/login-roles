@@ -15,6 +15,10 @@ export class JwtService {
     localStorage.setItem('current-user', JSON.stringify(user))
   }
 
+  getUser() {
+    localStorage.getItem('current-user')
+  }
+
   isLoggedIn(): boolean {
     let token = localStorage.getItem('x-access-token')
     if (token) {

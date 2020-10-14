@@ -68,7 +68,7 @@ router.post('/login', async (req, res, next) => {
             lastname: user.lastname,
             firstname: user.firstname,
             email: result.email,
-            role: result.role
+            role: user.role
         })
     } catch (error) {
         if (error.isJoi === true) return next(createError.BadRequest('Incorrect email or password type.')) // 400

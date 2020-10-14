@@ -1,0 +1,44 @@
+@baseUrl = http://localhost:3000/api
+
+### Home
+GET {{baseUrl}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDI1NzAzNzksImV4cCI6MTYwMjU3MDk3OSwiYXVkIjoiMiJ9.KSoGkwDTunFmcwBraStTXiR5d72Ure5I91CVadxT6k8
+
+### Login route
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "email": "vtmn1212@gmail.com",
+    "password": "123456"
+}
+
+### Validate Email
+GET {{baseUrl}}/users/validate/vtmn1212@gmail.com
+
+### Register route
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+    "email": "vtmn1212@gmail.com",
+    "password": "123456",
+    "firstname": "Nhung",
+    "lastname": "Vo"
+}
+
+### Refresh token route
+POST {{baseUrl}}/auth/refresh-token
+Content-Type: application/json
+
+{
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDIxNDAxNzgsImV4cCI6MTYwMjc0NDk3OCwiYXVkIjoiMjQifQ.eWVXhvbCQcCN7UXvL1aTiWMzFI-O91Ctl2XuN6QFLaI"
+}
+
+### Logout route
+DELETE {{baseUrl}}/auth/logout
+Content-Type: application/json
+
+{
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTg5MzYxMzUsImV4cCI6MTYzMDQ5MzczNSwiYXVkIjpbNzddfQ.yRAtPZZfm2-Yw9TDYFhH2ZT3QHv4zyBORd3_LQGimQg"
+}

@@ -1,0 +1,35 @@
+<section id="login" class="d-flex flex-column justify-content-center align-items-center">
+    <div class="text-uppercase text-center mb-3 font-20 font-weight-bold">
+        <p class="mt-4 mb-1">login</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <input type="email" formControlName="email" class="form-control" id="username" placeholder="Email address"
+                [ngClass]="{'is-invalid':email.errors && email.touched}">
+            <div class="invalid-feedback mt-1 font-13" *ngIf="email.hasError('required')">
+                Email is required
+            </div>
+        </div>
+
+        <div class="form-group">
+            <input type="password" formControlName="password" class="form-control" id="password" placeholder="Password"
+                minlength="6" [ngClass]="{'is-invalid': password.errors && password.touched}">
+            <div class="invalid-feedback mt-1 font-13" *ngIf="password.hasError('required')">
+                Password is required
+            </div>
+            <div class="invalid-feedback mt-1 font-13" *ngIf="password.hasError('minlength')">
+                Password must be at least 6 characters
+            </div>
+        </div>
+
+        <button class="btn-login font-weight-bold text-uppercase text-light font-13" type="submit"
+            [disabled]="loginForm.invalid" [class.disable]="loginForm.invalid">Login
+        </button>
+    </form>
+
+    <div class="font-13 mt-1 text-center">
+        <p class="mb-1 text-secondary">Create a new account</p>
+        <p routerLink="/register" style="cursor: pointer;"><u>Click here</u></p>
+    </div>
+</section>

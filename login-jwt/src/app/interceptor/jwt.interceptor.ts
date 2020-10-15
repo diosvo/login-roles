@@ -10,6 +10,7 @@ import { JwtService } from '../services/jwt.service';
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
     constructor(private authService: AuthService, private token: JwtService) { }
+    refreshingAccessTokens: boolean
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const accessToken = localStorage.getItem('x-access-token')
@@ -19,10 +20,10 @@ export class JwtInterceptor implements HttpInterceptor {
 
         return next.handle(request).pipe(
             catchError(error => {
-                if (error.status === 401) {
+                if (error.status === 401 && !this.refreshingAccessTokens) {
                     // 401 Authorization
                     // Refresh the access token
-                    this.refreshAccessToken()
+                    return this.refreshAccessToken()
                         .pipe(
                             switchMap(() => {
                                 request = this.addToken(request, accessToken)
@@ -40,8 +41,10 @@ export class JwtInterceptor implements HttpInterceptor {
     }
 
     private refreshAccessToken() {
+        this.refreshingAccessTokens = true
         return this.token.getNewAccessToken().pipe(
             tap(() => {
+                this.refreshingAccessTokens = false
                 console.log('Access token is refreshed')
             })
         )

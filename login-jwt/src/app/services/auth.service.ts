@@ -45,8 +45,9 @@ export class AuthService {
         map((user: UserModelServer) => {
           if (user && user.accessToken) {
             this.token.tokenStorage(user.accessToken, user.refreshToken)
-            localStorage.setItem('current-user', JSON.stringify(user))
+            this.token.setUser(user)
             this.userSubject.next(user)
+            window.location.reload()
           }
           return user
         })
@@ -56,6 +57,8 @@ export class AuthService {
   logout() {
     this.token.removeTokens()
     this.userSubject.next(null)
+
+    window.location.reload()
     this.router.navigate(['/'])
   }
 }

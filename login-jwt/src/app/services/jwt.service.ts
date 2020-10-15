@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { tap, window} from 'rxjs/operators';
+import { UserModelServer } from '../model/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +19,14 @@ export class JwtService {
     localStorage.setItem('x-refresh-token', refreshToken)
   }
 
+  setAccessToken(accessToken: string) {
+    localStorage.setItem('x-access-token', accessToken)
+  }
+
+  setUser(user: UserModelServer) {
+    localStorage.setItem('current-user', JSON.stringify(user))
+  }
+
   getRefreshToken() {
     localStorage.getItem('x-refresh-token')
   }
@@ -26,7 +36,9 @@ export class JwtService {
       headers: {
         'x-refresh-token': this.getRefreshToken()
       }
-    })
+    }).pipe(tap((res: HttpResponse<any>) => {
+      this.setAccessToken(res.headers.get('x-access-token'))
+    }))
   }
 
   isLoggedIn(): boolean {

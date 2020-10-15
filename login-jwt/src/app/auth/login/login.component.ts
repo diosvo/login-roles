@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { AuthService } from 'src/app/services/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { JwtService } from 'src/app/services/jwt.service';
 import { first } from 'rxjs/operators';
+
+import { AuthService } from 'src/app/services/auth.service';
+import { JwtService } from 'src/app/services/jwt.service';
 import { Role } from 'src/app/model/role.model';
 
 @Component({
@@ -11,30 +12,29 @@ import { Role } from 'src/app/model/role.model';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
+
 export class LoginComponent implements OnInit {
 
   loading = false
   returnUrl: string
 
-  loginForm = this.fb.group(
-    {
+  loginForm = this.fb.group({
       email: ["", [Validators.required]],
       password: ["", [Validators.required]],
-    }
-  )
+    })
 
   constructor(private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
     private token: JwtService,
     private route: ActivatedRoute) {
-    if (this.authService.userValue) this.router.navigate(['/'])
+    if (this.authService.userValue) this.router.navigate(['/home'])
   }
 
   ngOnInit(): void {
     let isLoggedIn = this.token.isLoggedIn()
     if (isLoggedIn) {
-      this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+      this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
     }
   }
 
@@ -53,7 +53,6 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/home'])
         }
       }, error => {
-        console.log(error);
         this.loading = false
       })
 
@@ -67,5 +66,4 @@ export class LoginComponent implements OnInit {
   get password() {
     return this.loginForm.get('password')
   }
-
 }

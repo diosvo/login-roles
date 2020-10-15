@@ -26,7 +26,7 @@ export class RegisterComponent implements OnInit {
     {
       validator: this.validation.passwordMatchValidator("password", "cfpassword")
     }
-  );
+  )
 
   constructor(private fb: FormBuilder,
     private router: Router,

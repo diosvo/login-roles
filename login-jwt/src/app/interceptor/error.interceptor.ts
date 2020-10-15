@@ -24,7 +24,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         }
 
         if (err.status === 401) {
-            this.toastr.error('Your email or password is incorrect.', 'Please, try again!', {
+            this.toastr.error('Please, try again!', 'Unauthorized!', {
                 timeOut: 2500,
                 positionClass: 'toast-top-right',
                 closeButton: true

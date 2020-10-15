@@ -13,6 +13,7 @@ import { Role } from 'src/app/model/role.model';
   styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent implements OnInit {
+  
   isLoggedIn: Boolean
   products: ProductModelServer[];
   currentUser: UserModelServer

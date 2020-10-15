@@ -8,6 +8,7 @@ import { ProductsService } from 'src/app/services/products.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
+
 export class HomeComponent implements OnInit {
   products: ProductModelServer[];
 

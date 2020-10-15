@@ -22,8 +22,11 @@
     </table>
 </div>
 
-<div *ngIf="!isAdmin && isLoggedIn">
-    <div class="alert alert-danger text-center">
+<div class=" text-center" *ngIf="!isAdmin && isLoggedIn">
+    <div class="alert alert-danger">
         You don't have permission to access this page!
+    </div>
+    <div style="cursor:pointer">
+        <u routerLink="/home">Back to Home</u>
     </div>
 </div>

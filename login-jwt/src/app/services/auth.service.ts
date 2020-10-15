@@ -7,6 +7,7 @@ import { UserModelServer } from '../model/user.model';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { JwtService } from './jwt.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,8 @@ export class AuthService {
   public user: Observable<UserModelServer>
 
   constructor(private http: HttpClient,
-    private router: Router) {
+    private router: Router,
+    private token: JwtService) {
     this.userSubject = new BehaviorSubject<UserModelServer>(JSON.parse(localStorage.getItem('current-user')));
     this.user = this.userSubject.asObservable();
   }
@@ -40,20 +42,19 @@ export class AuthService {
   loginUser(email: string, password: string) {
     return this.http.post<any>(`${this.SERVER_URL}/auth/login`, { email, password })
       .pipe(
-        map((res: UserModelServer) => {
-          if (res && res.accessToken) {
-            localStorage.setItem('x-access-token', res.accessToken)
-            localStorage.setItem('current-user', JSON.stringify(res))
-            this.userSubject.next(res)
+        map((user: UserModelServer) => {
+          if (user && user.accessToken) {
+            this.token.tokenStorage(user.accessToken, user.refreshToken)
+            localStorage.setItem('current-user', JSON.stringify(user))
+            this.userSubject.next(user)
           }
-          return res
+          return user
         })
       )
   }
 
   logout() {
-    localStorage.removeItem('current-user')
-    localStorage.removeItem('x-access-token')
+    this.token.removeTokens()
     this.userSubject.next(null)
     this.router.navigate(['/'])
   }

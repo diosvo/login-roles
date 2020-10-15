@@ -16,7 +16,6 @@ import { RegisterModule } from './auth/register/register.module';
 import { AdminRoutingModule } from './pages/admin/admin-routing.module';
 import { HomeModule } from './pages/home/home.module';
 
-
 @NgModule({
   declarations: [
     AppComponent
@@ -37,7 +36,7 @@ import { HomeModule } from './pages/home/home.module';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

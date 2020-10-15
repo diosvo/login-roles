@@ -1,22 +1,32 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class JwtService {
 
-  constructor() { }
+  private SERVER_URL = environment.SERVER_URL
 
-  setAccessToken(accessToken: string) {
+  constructor(private http: HttpClient) { }
+
+  tokenStorage(accessToken: string, refreshToken: string) {
     localStorage.setItem('x-access-token', accessToken)
+    localStorage.setItem('x-refresh-token', refreshToken)
   }
 
-  setCurrentUser(user) {
-    localStorage.setItem('current-user', JSON.stringify(user))
+  getRefreshToken() {
+    localStorage.getItem('x-refresh-token')
   }
 
-  getUser() {
-    localStorage.getItem('current-user')
+  getNewAccessToken() {
+    return this.http.post<any>(this.SERVER_URL + '/auth/refresh-token', {
+      headers: {
+        'x-refresh-token': this.getRefreshToken()
+      }
+    })
   }
 
   isLoggedIn(): boolean {
@@ -25,5 +35,9 @@ export class JwtService {
       return true
     }
     return false
+  }
+
+  removeTokens() {
+    localStorage.clear();
   }
 }

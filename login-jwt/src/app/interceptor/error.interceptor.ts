@@ -17,7 +17,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     public handleAuthError(err: HttpErrorResponse): Observable<any> {
         if (err.status === 400) {
             this.toastr.warning('Incorrect email or password type.', 'Please, try again!', {
-                timeOut: 2500,
+                timeOut: 3000,
                 positionClass: 'toast-top-right',
                 closeButton: true
             })
@@ -25,7 +25,7 @@ export class ErrorInterceptor implements HttpInterceptor {
 
         if (err.status === 401) {
             this.toastr.error('Please, try again!', 'Unauthorized!', {
-                timeOut: 2500,
+                timeOut: 10000,
                 positionClass: 'toast-top-right',
                 closeButton: true
             })

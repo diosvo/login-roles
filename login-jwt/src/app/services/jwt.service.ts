@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { tap, window} from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { UserModelServer } from '../model/user.model';
 
 @Injectable({

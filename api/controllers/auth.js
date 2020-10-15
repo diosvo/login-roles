@@ -4,18 +4,18 @@ const bcrypt = require('bcryptjs');
 const createError = require('http-errors');
 require('dotenv').config()
 
-const {database} = require('../config/db');
-const {signAccessToken, signRefreshToken, verifyRefreshToken} = require('../config/jwt');
-const {authSchema} = require('../config/validation_schema');
+const { database } = require('../config/db');
+const { signAccessToken, signRefreshToken, verifyRefreshToken } = require('../config/jwt');
+const { authSchema } = require('../config/validation_schema');
 
 router.post('/register', async (req, res, next) => {
-    let customer = 'customer'
+    let customer = 'Customer'
     try {
         const result = await authSchema.validateAsync(req.body)
 
         // Email is already registered
-        const doesExit = await database.table('users').filter({email: result.email}).get();
-        if (doesExit) throw createError({message: `${result.email} is already registered`})
+        const doesExit = await database.table('users').filter({ email: result.email }).get();
+        if (doesExit) throw createError({ message: `${result.email} is already registered` })
 
         // Hash password
         const salt = bcrypt.genSaltSync(10);
@@ -43,7 +43,7 @@ router.post('/register', async (req, res, next) => {
 router.post('/login', async (req, res, next) => {
     try {
         const result = await authSchema.validateAsync(req.body)
-        const user = await database.table('users').filter({email: result.email}).get();
+        const user = await database.table('users').filter({ email: result.email }).get();
 
         // Check email
         if (!user) throw createError.NotFound('User not registered') // 404
@@ -78,13 +78,13 @@ router.post('/login', async (req, res, next) => {
 
 router.post('/refresh-token', async (req, res, next) => {
     try {
-        const {refreshToken} = req.body
+        const { refreshToken } = req.body
         if (!refreshToken || !refreshToken.includes(refreshToken)) throw createError.Unauthorized()
 
         const userID = await verifyRefreshToken(refreshToken)
         const accessToken = await signAccessToken(userID)
 
-        res.send({accessToken: accessToken})
+        res.send({ accessToken: accessToken })
     } catch (err) {
         next(err)
     }
